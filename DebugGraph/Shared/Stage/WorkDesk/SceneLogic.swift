@@ -6,66 +6,86 @@
 //
 
 import SwiftUI
-import SubSpace
+import IntGraph
 
 final class SceneLogic: ObservableObject {
 
     private let key = String(describing: SceneLogic.self)
     private let data = SceneData.data
-
-    let animator: GraphAnimator
+    
 //    var graph = Graph(edges: [
-//        .init(a: 0, b: 1),
-//        .init(a: 0, b: 4),
-//        .init(a: 0, b: 5),
-//        .init(a: 1, b: 3),
-//        .init(a: 1, b: 4),
-//        .init(a: 1, b: 6),
-//        .init(a: 2, b: 0),
-//        .init(a: 2, b: 3),
-//        .init(a: 2, b: 4),
-//        .init(a: 2, b: 7),
-//        .init(a: 3, b: 4),
-//        .init(a: 5, b: 7),
+//        Edge(a: 0, b: 1),
+//        Edge(a: 0, b: 2),
+//        Edge(a: 1, b: 3),
+//        Edge(a: 2, b: 3),
+//
+//        Edge(a: 3, b: 16),
+//
+//        Edge(a: 4, b: 5),
+//        Edge(a: 4, b: 7),
+//        Edge(a: 5, b: 6),
+//        Edge(a: 6, b: 7),
+//
+//        Edge(a: 4, b: 17),
+//
+//        Edge(a: 8, b: 9),
+//        Edge(a: 8, b: 11),
+//        Edge(a: 9, b: 10),
+//        Edge(a: 10, b: 11),
+//
+//        Edge(a: 8, b: 18),
+//
+//        Edge(a: 12, b: 13),
+//        Edge(a: 12, b: 15),
+//        Edge(a: 13, b: 14),
+//        Edge(a: 14, b: 15),
+//
+//        Edge(a: 12, b: 19),
+//
+//        Edge(a: 16, b: 17),
+//        Edge(a: 16, b: 19),
+//        Edge(a: 17, b: 18),
+//        Edge(a: 18, b: 19),
 //    ])
-    
-    var graph = Graph(edges: [
-        .init(a: 0, b: 1),
-        .init(a: 0, b: 2),
-        .init(a: 1, b: 3),
-        .init(a: 2, b: 3),
-        
-        .init(a: 3, b: 16),
-        
-        .init(a: 4, b: 5),
-        .init(a: 4, b: 7),
-        .init(a: 5, b: 6),
-        .init(a: 6, b: 7),
-        
-        .init(a: 4, b: 17),
-        
-        .init(a: 8, b: 9),
-        .init(a: 8, b: 11),
-        .init(a: 9, b: 10),
-        .init(a: 10, b: 11),
-        
-        .init(a: 8, b: 18),
-        
-        .init(a: 12, b: 13),
-        .init(a: 12, b: 15),
-        .init(a: 13, b: 14),
-        .init(a: 14, b: 15),
-        
-        .init(a: 12, b: 19),
-        
-        .init(a: 16, b: 17),
-        .init(a: 16, b: 19),
-        .init(a: 17, b: 18),
-        .init(a: 18, b: 19),
-    ])
-    
-    init() {
-        animator = GraphAnimator(graph: graph, timeInterval: 0.02, radius: 50)
-    }
 
+        var graph = Graph(edges: [
+            Edge(a: 0, b: 1),
+            Edge(a: 0, b: 2),
+            Edge(a: 0, b: 4),
+            Edge(a: 0, b: 5),
+            Edge(a: 0, b: 6),
+            Edge(a: 1, b: 3),
+            Edge(a: 1, b: 4),
+            Edge(a: 1, b: 6),
+            Edge(a: 2, b: 3),
+            Edge(a: 2, b: 4),
+            Edge(a: 2, b: 7),
+            Edge(a: 3, b: 4),
+            Edge(a: 5, b: 7),
+        ])
+    
+    func getGraphState(size: CGSize) -> CircleGraphView.Data {
+        var nodes = [CircleGraphView.Node]()
+
+        let color = Color(red: 0.5, green: 0.5, blue: 1, opacity: 1)
+        
+        for i in 0..<graph.size {
+            nodes.append(.init(index: i, radius: 5, color: color))
+        }
+        
+        var edges = [CircleGraphView.Edge]()
+        let edgeList = graph.edges
+        for edge in edgeList {
+            edges.append(.init(a: edge.a, b: edge.b, width: 4, color: color))
+        }
+        
+        let rx = ceil(0.5 * size.width)
+        let ry = ceil(0.5 * size.height)
+        
+        let center = CGPoint(x: rx, y: ry)
+        let radius = min(rx, ry) - 30
+        
+        return .init(radius: radius, center: center, nodes: nodes, edges: edges)
+    }
+    
 }

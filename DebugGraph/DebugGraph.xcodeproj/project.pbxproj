@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		546256E427356013008DACE2 /* SubSpace in Frameworks */ = {isa = PBXBuildFile; productRef = 546256E327356013008DACE2 /* SubSpace */; };
-		546256E627356021008DACE2 /* SubSpace in Frameworks */ = {isa = PBXBuildFile; productRef = 546256E527356021008DACE2 /* SubSpace */; };
 		5462BCFD26FCD8BA00B799F6 /* DebugAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5462BCED26FCD8B900B799F6 /* DebugAppApp.swift */; };
 		5462BCFE26FCD8BA00B799F6 /* DebugAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5462BCED26FCD8B900B799F6 /* DebugAppApp.swift */; };
 		5462BCFF26FCD8BA00B799F6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5462BCEE26FCD8B900B799F6 /* ContentView.swift */; };
@@ -31,18 +29,17 @@
 		5462BD2826FCD92B00B799F6 /* SceneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5462BD1526FCD92B00B799F6 /* SceneData.swift */; };
 		5462BD2926FCD92B00B799F6 /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5462BD1626FCD92B00B799F6 /* SceneView.swift */; };
 		5462BD2A26FCD92B00B799F6 /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5462BD1626FCD92B00B799F6 /* SceneView.swift */; };
-		54A08B7A274A8BE300A17F78 /* GraphAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08B79274A8BE300A17F78 /* GraphAnimator.swift */; };
-		54A08B7B274A8BE300A17F78 /* GraphAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08B79274A8BE300A17F78 /* GraphAnimator.swift */; };
-		54A08B7D274A8C5F00A17F78 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08B7C274A8C5F00A17F78 /* GraphView.swift */; };
-		54A08B7E274A8C5F00A17F78 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08B7C274A8C5F00A17F78 /* GraphView.swift */; };
+		546EAFDF275CD90800A83AE0 /* CircleGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 546EAFDE275CD90800A83AE0 /* CircleGraphView.swift */; };
+		546EAFE0275CD90800A83AE0 /* CircleGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 546EAFDE275CD90800A83AE0 /* CircleGraphView.swift */; };
+		546EAFE3275CF79900A83AE0 /* IntGraph in Frameworks */ = {isa = PBXBuildFile; productRef = 546EAFE2275CF79900A83AE0 /* IntGraph */; };
+		546EAFE5275CF7A000A83AE0 /* IntGraph in Frameworks */ = {isa = PBXBuildFile; productRef = 546EAFE4275CF7A000A83AE0 /* IntGraph */; };
+		546EAFE7275D1D3B00A83AE0 /* ArcView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 546EAFE6275D1D3B00A83AE0 /* ArcView.swift */; };
+		546EAFE8275D1D3B00A83AE0 /* ArcView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 546EAFE6275D1D3B00A83AE0 /* ArcView.swift */; };
 		54A08B80274AA05F00A17F78 /* Graph+Edges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08B7F274AA05F00A17F78 /* Graph+Edges.swift */; };
 		54A08B81274AA05F00A17F78 /* Graph+Edges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A08B7F274AA05F00A17F78 /* Graph+Edges.swift */; };
-		54D889642747B8A600BCE430 /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D889632747B8A600BCE430 /* Graph.swift */; };
-		54D889672747B8DC00BCE430 /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D889632747B8A600BCE430 /* Graph.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		546256E227355EB7008DACE2 /* SubSpace */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SubSpace; path = ../SubSpace; sourceTree = "<group>"; };
 		5462BCED26FCD8B900B799F6 /* DebugAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugAppApp.swift; sourceTree = "<group>"; };
 		5462BCEE26FCD8B900B799F6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5462BCEF26FCD8BA00B799F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -57,10 +54,10 @@
 		5462BD1426FCD92B00B799F6 /* SceneLogic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneLogic.swift; sourceTree = "<group>"; };
 		5462BD1526FCD92B00B799F6 /* SceneData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneData.swift; sourceTree = "<group>"; };
 		5462BD1626FCD92B00B799F6 /* SceneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
-		54A08B79274A8BE300A17F78 /* GraphAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphAnimator.swift; sourceTree = "<group>"; };
-		54A08B7C274A8C5F00A17F78 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
+		546EAFDE275CD90800A83AE0 /* CircleGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleGraphView.swift; sourceTree = "<group>"; };
+		546EAFE1275CF6BF00A83AE0 /* IntGraph */ = {isa = PBXFileReference; lastKnownFileType = folder; name = IntGraph; path = ../IntGraph; sourceTree = "<group>"; };
+		546EAFE6275D1D3B00A83AE0 /* ArcView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcView.swift; sourceTree = "<group>"; };
 		54A08B7F274AA05F00A17F78 /* Graph+Edges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Graph+Edges.swift"; sourceTree = "<group>"; };
-		54D889632747B8A600BCE430 /* Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,7 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				546256E627356021008DACE2 /* SubSpace in Frameworks */,
+				546EAFE3275CF79900A83AE0 /* IntGraph in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				546256E427356013008DACE2 /* SubSpace in Frameworks */,
+				546EAFE5275CF7A000A83AE0 /* IntGraph in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,6 +156,7 @@
 			children = (
 				5462BD1226FCD92B00B799F6 /* DotView.swift */,
 				5462BD1326FCD92B00B799F6 /* EdgeView.swift */,
+				546EAFE6275D1D3B00A83AE0 /* ArcView.swift */,
 			);
 			path = Shape;
 			sourceTree = "<group>";
@@ -166,7 +164,7 @@
 		5462BD3126FCD9D700B799F6 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				546256E227355EB7008DACE2 /* SubSpace */,
+				546EAFE1275CF6BF00A83AE0 /* IntGraph */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -181,8 +179,7 @@
 		54A08B78274A8BCD00A17F78 /* Graph */ = {
 			isa = PBXGroup;
 			children = (
-				54A08B79274A8BE300A17F78 /* GraphAnimator.swift */,
-				54A08B7C274A8C5F00A17F78 /* GraphView.swift */,
+				546EAFDE275CD90800A83AE0 /* CircleGraphView.swift */,
 			);
 			path = Graph;
 			sourceTree = "<group>";
@@ -190,7 +187,6 @@
 		54D889622747B89500BCE430 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				54D889632747B8A600BCE430 /* Graph.swift */,
 				54A08B7F274AA05F00A17F78 /* Graph+Edges.swift */,
 			);
 			path = Library;
@@ -213,7 +209,7 @@
 			);
 			name = "DebugGraph (iOS)";
 			packageProductDependencies = (
-				546256E527356021008DACE2 /* SubSpace */,
+				546EAFE2275CF79900A83AE0 /* IntGraph */,
 			);
 			productName = "DebugApp (iOS)";
 			productReference = 5462BCF426FCD8BA00B799F6 /* DebugGraph.app */;
@@ -233,7 +229,7 @@
 			);
 			name = "DebugGraph (macOS)";
 			packageProductDependencies = (
-				546256E327356013008DACE2 /* SubSpace */,
+				546EAFE4275CF7A000A83AE0 /* IntGraph */,
 			);
 			productName = "DebugApp (macOS)";
 			productReference = 5462BCFA26FCD8BA00B799F6 /* DebugGraph.app */;
@@ -302,15 +298,14 @@
 			files = (
 				5462BD1F26FCD92B00B799F6 /* StageView.swift in Sources */,
 				54A08B80274AA05F00A17F78 /* Graph+Edges.swift in Sources */,
-				54D889642747B8A600BCE430 /* Graph.swift in Sources */,
+				546EAFE7275D1D3B00A83AE0 /* ArcView.swift in Sources */,
 				5462BD2926FCD92B00B799F6 /* SceneView.swift in Sources */,
+				546EAFDF275CD90800A83AE0 /* CircleGraphView.swift in Sources */,
 				5462BD1D26FCD92B00B799F6 /* CGPoint.swift in Sources */,
 				5462BD2326FCD92B00B799F6 /* EdgeView.swift in Sources */,
 				5462BD2126FCD92B00B799F6 /* DotView.swift in Sources */,
 				5462BD2726FCD92B00B799F6 /* SceneData.swift in Sources */,
-				54A08B7A274A8BE300A17F78 /* GraphAnimator.swift in Sources */,
 				5462BD1B26FCD92B00B799F6 /* CityMatrix+Points.swift in Sources */,
-				54A08B7D274A8C5F00A17F78 /* GraphView.swift in Sources */,
 				5462BCFF26FCD8BA00B799F6 /* ContentView.swift in Sources */,
 				5462BCFD26FCD8BA00B799F6 /* DebugAppApp.swift in Sources */,
 				5462BD2526FCD92B00B799F6 /* SceneLogic.swift in Sources */,
@@ -323,15 +318,14 @@
 			files = (
 				5462BD2026FCD92B00B799F6 /* StageView.swift in Sources */,
 				54A08B81274AA05F00A17F78 /* Graph+Edges.swift in Sources */,
-				54D889672747B8DC00BCE430 /* Graph.swift in Sources */,
+				546EAFE8275D1D3B00A83AE0 /* ArcView.swift in Sources */,
 				5462BD2A26FCD92B00B799F6 /* SceneView.swift in Sources */,
+				546EAFE0275CD90800A83AE0 /* CircleGraphView.swift in Sources */,
 				5462BD1E26FCD92B00B799F6 /* CGPoint.swift in Sources */,
 				5462BD2426FCD92B00B799F6 /* EdgeView.swift in Sources */,
 				5462BD2226FCD92B00B799F6 /* DotView.swift in Sources */,
 				5462BD2826FCD92B00B799F6 /* SceneData.swift in Sources */,
-				54A08B7B274A8BE300A17F78 /* GraphAnimator.swift in Sources */,
 				5462BD1C26FCD92B00B799F6 /* CityMatrix+Points.swift in Sources */,
-				54A08B7E274A8C5F00A17F78 /* GraphView.swift in Sources */,
 				5462BD0026FCD8BA00B799F6 /* ContentView.swift in Sources */,
 				5462BCFE26FCD8BA00B799F6 /* DebugAppApp.swift in Sources */,
 				5462BD2626FCD92B00B799F6 /* SceneLogic.swift in Sources */,
@@ -602,13 +596,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		546256E327356013008DACE2 /* SubSpace */ = {
+		546EAFE2275CF79900A83AE0 /* IntGraph */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = SubSpace;
+			productName = IntGraph;
 		};
-		546256E527356021008DACE2 /* SubSpace */ = {
+		546EAFE4275CF7A000A83AE0 /* IntGraph */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = SubSpace;
+			productName = IntGraph;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
