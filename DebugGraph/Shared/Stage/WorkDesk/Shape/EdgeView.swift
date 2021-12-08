@@ -11,33 +11,36 @@ struct EdgeView: View {
 
     struct Data: Identifiable {
         let id: Int
-        let points: [CGPoint]
+        let start: CGPoint
+        let end: CGPoint
         let color: Color
         let lineWidth: CGFloat
     }
-    
+
+    private let start: CGPoint
+    private let end: CGPoint
     private let color: Color
     private let lineWidth: CGFloat
-    private let points: [CGPoint]
     
-    init(points: [CGPoint], lineWidth: CGFloat = 3, color: Color = .gray) {
-        self.points = points
+    
+    init(start: CGPoint, end: CGPoint, lineWidth: CGFloat, color: Color) {
+        self.start = start
+        self.end = end
         self.lineWidth = lineWidth
         self.color = color
     }
     
     init(data: Data) {
-        self.points = data.points
-        self.lineWidth = data.lineWidth
-        self.color = data.color
+        start = data.start
+        end = data.end
+        lineWidth = data.lineWidth
+        color = data.color
     }
 
     var body: some View {
-        ZStack {
-            Path { path in
-                path.addLines(points)
-                path.closeSubpath()
-            }.strokedPath(.init(lineWidth: lineWidth, lineCap: .round)).foregroundColor(color)
-        }
+        Path { path in
+            path.move(to: start)
+            path.addLine(to: end)
+        }.strokedPath(.init(lineWidth: lineWidth, lineCap: .round)).foregroundColor(color)
     }
 }

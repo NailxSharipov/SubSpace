@@ -31,27 +31,37 @@ struct CircleGraphView: View {
 
     private let dots: [DotView.Data]
     private let arcs: [ArcView.Data]
+    private let edges: [EdgeView.Data]
     
     init(data: Data) {
         self.dots = Self.convert(count: data.nodes.count, radius: data.radius, center: data.center, nodes: data.nodes)
-        self.arcs = Self.convert(count: data.nodes.count, radius: data.radius, center: data.center, edges: data.edges)
+        let result = Self.convert(count: data.nodes.count, radius: data.radius, center: data.center, edges: data.edges)
+        self.arcs = result.arcs
+        self.edges = result.edges
     }
     
     init(nodes: [Node], edges: [Edge], radius: CGFloat, center: CGPoint) {
         self.dots = Self.convert(count: nodes.count, radius: radius, center: center, nodes: nodes)
-        self.arcs = Self.convert(count: nodes.count, radius: radius, center: center, edges: edges)
+        let result = Self.convert(count: nodes.count, radius: radius, center: center, edges: edges)
+        self.arcs = result.arcs
+        self.edges = result.edges
     }
     
     init(nodes: [Node], edges: [Edge], distance: CGFloat, center: CGPoint) {
         let radius = distance * CGFloat(nodes.count) / (2 * .pi)
         self.dots = Self.convert(count: nodes.count, radius: radius, center: center, nodes: nodes)
-        self.arcs = Self.convert(count: nodes.count, radius: radius, center: center, edges: edges)
+        let result = Self.convert(count: nodes.count, radius: radius, center: center, edges: edges)
+        self.arcs = result.arcs
+        self.edges = result.edges
     }
     
     var body: some View {
         ZStack {
             ForEach(arcs) { arc in
                 ArcView(data: arc)
+            }
+            ForEach(edges) { edge in
+                EdgeView(data: edge)
             }
             ForEach(dots) { dot in
                 DotView(
@@ -63,11 +73,13 @@ struct CircleGraphView: View {
         }
     }
     
-    private static func convert(count: Int, radius: CGFloat, center: CGPoint, edges: [Edge]) -> [ArcView.Data] {
+    private static func convert(count: Int, radius: CGFloat, center: CGPoint, edges: [Edge]) -> (arcs: [ArcView.Data], edges: [EdgeView.Data]) {
         let dA: CGFloat = 2 * .pi / CGFloat(count)
         
         var arcs = [ArcView.Data]()
         arcs.reserveCapacity(edges.count)
+        
+        var edgeList = [EdgeView.Data]()
         
         for edge in edges {
             let id = edge.getId(count: count)
@@ -87,22 +99,35 @@ struct CircleGraphView: View {
                 )
             } else {
                 let m = 0.5 * (a + b)
-                let mc = (m - center).normalize
-                let cc = m + 2 * radius * mc
-                arcs.append(
-                    .init(
-                        id: id,
-                        start: a,
-                        end: b,
-                        center: cc,
-                        color: edge.color,
-                        lineWidth: edge.width
+                let d = m - center
+                if d.magnitude > 1 {
+                    let mc = (m - center).normalize
+                    let cc = m + 2 * radius * mc
+                    arcs.append(
+                        .init(
+                            id: id,
+                            start: a,
+                            end: b,
+                            center: cc,
+                            color: edge.color,
+                            lineWidth: edge.width
+                        )
                     )
-                )
+                } else {
+                    edgeList.append(
+                        .init(
+                            id: id,
+                            start: a,
+                            end: b,
+                            color: edge.color,
+                            lineWidth: edge.width
+                        )
+                    )
+                }
             }
         }
         
-        return arcs
+        return (arcs, edgeList)
     }
     
     private static func convert(count: Int, radius: CGFloat, center: CGPoint, nodes: [Node]) -> [DotView.Data] {

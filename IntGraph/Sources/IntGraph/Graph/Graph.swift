@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Graph.swift
 //  
 //
 //  Created by Nail Sharipov on 26.11.2021.
@@ -52,72 +52,19 @@ public struct Graph {
         nodes.remove(index)
     }
     
+    public mutating func remove(nodes set: IntSet) {
+        nodes.forEachIndex { i in
+            nodes[i].subtract(set)
+        }
+        set.forEach { i in
+            nodes.remove(i)
+        }
+    }
+    
     public mutating func removeAll() {
         nodes.removeAll()
     }
     
-}
-
-extension Graph {
-    
-    var isConective: Bool {
-        guard let node = nodes.first else { return true }
-        let first = node.first
-        guard first != .empty else {
-            return node.count == 1
-        }
-        
-        var buffer = nodes[first]
-        var visited = IntSet(size: size)
-        visited.insert(first)
-        visited.formUnion(buffer)
-        
-        var next = IntSet(size: size)
-        
-        let count = nodes.count
-        
-        while visited.count < count && !buffer.isEmpty {
-            buffer.forEach { index in
-                next.formUnion(nodes.buffer[index])
-            }
-            buffer = next.subtracting(visited)
-            visited.formUnion(buffer)
-            next.removeAll()
-        }
-
-        return visited.count == count
-    }
-    
-    func isConnective(a: Int, b: Int) -> Bool {
-        guard nodes.contains(a) && nodes.contains(b) else { return false }
-        
-        var buffer = nodes[a]
-        var visited = IntSet(size: size)
-        visited.insert(a)
-        visited.formUnion(buffer)
-
-        var next = IntSet(size: size)
-        
-        while !visited.contains(b) && !buffer.isEmpty {
-            buffer.forEach { index in
-                next.formUnion(nodes.buffer[index])
-            }
-            buffer = next.subtracting(visited)
-            visited.formUnion(buffer)
-            next.removeAll()
-        }
-        
-        return visited.contains(b)
-    }
-    
-
-//    func nodeSubSpaceCount(index: Int) -> Int {
-//        let node = self.nodes[index]
-//        guard node.count > 2 else {
-//            return node.count
-//        }
-//    }
-
 }
 
 extension Graph: CustomDebugStringConvertible, CustomStringConvertible {
@@ -154,7 +101,7 @@ extension Graph: CustomReflectable {
             indices.sort()
             if !indices.isEmpty {
                 let row = indices.map({ String($0) }).joined(separator: ", ")
-                result.append("\(a): \(row)\n")
+                result.append("(\(a): \(row)) ")
             }
         }
         return result

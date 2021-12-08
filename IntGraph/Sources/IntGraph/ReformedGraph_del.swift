@@ -1,12 +1,12 @@
 //
-//  EquivalentGraph.swift
+//  File.swift
 //  
 //
-//  Created by Nail Sharipov on 27.11.2021.
+//  Created by Nail Sharipov on 07.12.2021.
 //
 
-public extension Graph {
-
+struct ReformedGraph {
+    
     struct Bridge {
         enum Shape {
             case circle
@@ -19,45 +19,27 @@ public extension Graph {
         let vertices: IntSet
     }
     
-    func isHamiltonianPathExist(a: Int, b: Int) -> Bool {
-        guard self.isConnective(a: a, b: b) else {
-            return false
-        }
+    private (set) var graph: Graph
+    private var simplifiedEdges: [SortedEdge: Bridge] = [:]
 
-        guard self.isHamiltonianQualifiedVertices(a: a, b: b) else {
-            return false
-        }
-
-        var graph = self
-        guard graph.simplify(a: a, b: b) else {
-            return false
-        }
-
-        return true
-    }
-    
-    func isHamiltonianQualifiedVertices(a: Int, b: Int) -> Bool {
-        let index = nodes.firstIndex(where: { index, node in
-            node.count < 2 && index != a && index != b
-        })
-        return index == .empty
+    init(graph: Graph) {
+        self.graph = graph
     }
 
-    private mutating func simplify(a: Int, b: Int) -> Bool {
-        var allVertices = self.nodes.set
+    mutating func exclude2PairNodes(a: Int, b: Int) -> Bool {
+        var allVertices = graph.nodes.set
         allVertices.remove(a)
         allVertices.remove(b)
 
         var bridges = self.findBridgeEdges(indices: allVertices.sequence)
-        
-        var removedEdges = Set<SortedEdge>()
-        var nextIndices = IntSet(size: size)
+
+        var nextIndices = IntSet(size: graph.size)
         while !bridges.isEmpty {
             for bridge in bridges {
                 switch bridge.shape {
                 case .circle:
-                    if bridge.vertices.contains(a) && bridge.vertices.contains(b), nodes[a].contains(b) {
-                        self.removeAll()
+                    if bridge.vertices.contains(a) && bridge.vertices.contains(b), graph.nodes[a].contains(b) {
+                        graph.removeAll()
                         return true
                     } else {
                         return false
@@ -65,16 +47,16 @@ public extension Graph {
                 case .line:
                     let edge = SortedEdge(edge: Edge(a: bridge.a, b: bridge.b))
                     
-                    guard !removedEdges.contains(edge) else {
+                    guard simplifiedEdges[edge] == nil else {
                         return false
                     }
                     
                     bridge.vertices.forEach { index in
-                        self.removeNode(index: index)
+                        graph.removeNode(index: index)
                     }
                     
-                    removedEdges.insert(edge)
-                    self.add(edge: edge)
+                    simplifiedEdges[edge] = bridge
+                    graph.add(edge: edge)
                     
                     if edge.a != a && edge.a != b {
                         nextIndices.insert(edge.a)
@@ -87,28 +69,30 @@ public extension Graph {
             }
             bridges = self.findBridgeEdges(indices: nextIndices.sequence)
         }
+        
         return true
     }
     
-    private mutating func findBridgeEdges(indices: [Int]) -> [Bridge] {
+    
+    private func findBridgeEdges(indices: [Int]) -> [Bridge] {
         var result = [Bridge]()
-        var visited = IntSet(size: size)
+        var visited = IntSet(size: graph.size)
     nextIndex:
         for index in indices where !visited.contains(index) {
-            let node = nodes[index]
+            let node = graph.nodes[index]
             if node.count == 2 {
-                var vertices = IntSet(size: size)
+                var vertices = IntSet(size: graph.size)
                 vertices.insert(index)
                 
                 var prev = index
                 var ia = node.first
-                var a = nodes[ia]
+                var a = graph.nodes[ia]
                 while a.count == 2 {
                     vertices.insert(ia)
                     let next = a.opposite(index: prev)
                     prev = ia
                     ia = next
-                    a = nodes[ia]
+                    a = graph.nodes[ia]
                     if ia == index { // find a head, it's a circle
                         result.append(Bridge(shape: .circle, a: index, b: index, vertices: vertices))
                         visited.formUnion(vertices)
@@ -118,13 +102,13 @@ public extension Graph {
 
                 prev = index
                 var ib = node.first(where: { $0 != node.first })
-                var b = nodes[ib]
+                var b = graph.nodes[ib]
                 while b.count == 2 {
                     vertices.insert(ib)
                     let next = b.opposite(index: ib)
                     prev = ib
                     ib = next
-                    b = nodes[ib]
+                    b = graph.nodes[ib]
                 }
                 
                 visited.formUnion(vertices)
@@ -135,6 +119,7 @@ public extension Graph {
 
         return result
     }
+    
 }
 
 private extension IntSet {
