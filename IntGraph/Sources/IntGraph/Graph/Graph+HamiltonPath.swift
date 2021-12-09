@@ -21,28 +21,22 @@ public extension Graph {
 
         for i in indices {
             let subSets = self.split(node: i)
-            
-            let n = subSets.count
-
-            let node = nodes[i]
-            if (n == 1 && (i == a || i == b)) || node.count == 2 {
+            guard i != a && i != b else {
+                let opposite = i == a ? b : a
+                if subSets.contains(where: { !$0.contains(opposite) }) {
+                    return false
+                }
+                
                 continue
             }
             
-            guard n == 2 else {
+            guard subSets.count <= 2, !subSets.contains(where: { !($0.contains(a) || $0.contains(b)) }) else {
                 return false
             }
             
-            // less then 2 subset is not possible cause isHamiltonianQualifiedVertices condition
-
-            let sub0 = subSets[0]
-            let sub1 = subSets[1]
-
-            guard (sub0.contains(a) || sub0.contains(b)) && (sub1.contains(a) || sub1.contains(b)) else {
-                return false
+            if subSets.count == 2 {
+                weakNodeSet.insert(i)
             }
-            
-            weakNodeSet.insert(i)
         }
 
         guard weakNodeSet.count > 0 else {
@@ -115,12 +109,14 @@ public extension Graph {
         var skipSet = IntSet(size: size)
         
         for i in 0..<indices.count - 1 where !skipSet.contains(i) {
-            guard nodes[i].count > 2 || i == a || i == b else {
+            let ni = nodes[i]
+            guard ni.count > 2 || i == a || i == b else {
                 continue
             }
             
             for j in i + 1..<indices.count where !skipSet.contains(j) {
-                guard nodes[j].count > 2 || j == a || j == b else {
+                let nj = nodes[j]
+                guard nj.count > 2 || j == a || j == b else {
                     continue
                 }
                 
@@ -131,11 +127,10 @@ public extension Graph {
                     continue
                 }
                 
-                if (i == a || i == b) && (j == a || j == b) {
-                    return true
-                }
-
-                guard n > 3 || (i == a || i == b || j == a || j == b) else {
+                let isEndA = i == a || i == b
+                let isEndB = j == a || j == b
+                
+                if isEndA || isEndB && (isEndA && isEndB || n == 3) {
                     return true
                 }
 
