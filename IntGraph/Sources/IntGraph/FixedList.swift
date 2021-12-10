@@ -64,13 +64,26 @@ public struct FixedList<T> {
     @inline(__always)
     public func contains(_ index: Int) -> Bool { set.contains(index) }
 
-    @inlinable
+//    @inlinable
+    @inline(__always)
     public func contains(where predicate: (T) -> Bool) -> Bool {
         for index in set.sequence {
             if predicate(buffer[index]) {
                 return true
             }
         }
+        return false
+    }
+    
+//    @inlinable
+    @inline(__always)
+    public func contains(where predicate: (Int, T) -> (Bool)) -> Bool {
+        for index in set.sequence {
+            if predicate(index, buffer[index]) {
+                return true
+            }
+        }
+
         return false
     }
     
@@ -97,7 +110,8 @@ public struct FixedList<T> {
         }
     }
     
-    @inlinable
+//    @inlinable
+    @inline(__always)
     public func firstIndex(where predicate: (T) -> (Bool)) -> Int {
         for index in set.sequence {
             if predicate(buffer[index]) {
@@ -108,7 +122,8 @@ public struct FixedList<T> {
         return .empty
     }
     
-    @inlinable
+//    @inlinable
+    @inline(__always)
     public func firstIndex(where predicate: (Int, T) -> (Bool)) -> Int {
         for index in set.sequence {
             if predicate(index, buffer[index]) {
@@ -119,7 +134,8 @@ public struct FixedList<T> {
         return .empty
     }
     
-    @inlinable
+//    @inlinable
+    @inline(__always)
     public func first(where predicate: (T) -> (Bool)) -> T? {
         for index in set.sequence {
             let value = buffer[index]
@@ -131,7 +147,8 @@ public struct FixedList<T> {
         return nil
     }
     
-    @inlinable
+//    @inlinable
+    @inline(__always)
     public func forEachIndex(_ body: (Int) -> ()) {
         self.set.forEach(body)
     }

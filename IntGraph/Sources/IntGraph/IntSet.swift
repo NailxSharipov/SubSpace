@@ -80,6 +80,19 @@ public struct IntSet {
     }
     
     @inline(__always)
+    public func contains(where predicate: (Int) -> Bool) -> Bool {
+        var index = firstIndex
+        while index != .empty {
+            if predicate(index) {
+                return true
+            }
+            index = buffer[index].next
+        }
+
+        return false
+    }
+    
+    @inline(__always)
     public mutating func insert(_ element: Int) {
         assert(element < buffer.count)
         guard !self.contains(element) else { return }

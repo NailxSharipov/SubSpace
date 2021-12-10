@@ -34,7 +34,7 @@ public extension Graph {
                 return false
             }
             
-            if subSets.count == 2 {
+            if subSets.count == 2, nodes[i].count > 2 {
                 weakNodeSet.insert(i)
             }
         }
@@ -46,8 +46,8 @@ public extension Graph {
         
         // break original graph into sub graphs a ... w0 ... w1 ... wN ... b
         
-        weakNodeSet.remove(a)
-        weakNodeSet.remove(b)
+        weakNodeSet.remove(a)  // remove !!!
+        weakNodeSet.remove(b)  // remove !!!
         var w0 = a
         
         var buffer = nodes[a]
@@ -56,43 +56,56 @@ public extension Graph {
         visited.formUnion(buffer)
         
         var next = IntSet(size: size)
-        var subSet = IntSet(size: size)
-        subSet.insert(a)
+        var restGraph = self
 
         while !weakNodeSet.isEmpty {
             let common = buffer.intersection(weakNodeSet)
             if common.isEmpty {
-                subSet.formUnion(buffer)
+                buffer.forEach { index in
+                    next.formUnion(nodes.buffer[index])
+                }
+                buffer = next.subtracting(visited)
+                visited.formUnion(buffer)
             } else {
                 let w1 = common.first
-                let hasLoop = self.isContainLoops(a: w0, b: w1, subSet: subSet)
+                
+                var subSet = restGraph.connected(a: w0, visited: IntSet(size: size, array: [w0, w1]))
+                let subtract = restGraph.nodes.set.subtracting(subSet)
+                var subGraph = restGraph
+                subGraph.remove(nodes: subtract)
+                
+                let hasLoop = subGraph.isContainLoops(a: w0, b: w1)
                 if hasLoop {
                     return false
                 }
+                subSet.remove(w1)
+                restGraph.remove(nodes: subSet)
+                
+                
+                visited.formUnion(subSet)
+                buffer = nodes[w1].subtracting(visited)
+                
                 w0 = w1
                 weakNodeSet.remove(w1)
-                subSet.removeAll()
-                subSet.insert(w1)
             }
-            
-            buffer.forEach { index in
-                next.formUnion(nodes.buffer[index])
-            }
-            buffer = next.subtracting(visited)
-            visited.formUnion(buffer)
             next.removeAll()
         }
-        
-        let hasLoop = self.isContainLoops(a: w0, b: b, subSet: subSet)
-        
+
+        let hasLoop = restGraph.isContainLoops(a: w0, b: b)
+
         return !hasLoop
     }
     
     private func isHamiltonianQualifiedVertices(a: Int, b: Int) -> Bool {
-        let index = nodes.firstIndex(where: { index, node in
-            node.count < 2 && index != a && index != b
+        let isContain = nodes.contains(where: { index, node in
+            if index == a || index == b {
+                return node.count == 0
+            } else {
+                return node.count < 2
+            }
         })
-        return index == .empty
+        
+        return !isContain && nodes.count == size
     }
 
     private func isContainLoops(a: Int, b: Int, subSet: IntSet) -> Bool {
@@ -103,48 +116,93 @@ public extension Graph {
         return subGraph.isContainLoops(a: a, b: b)
     }
     
+//    private func isContainLoops(a: Int, b: Int, inner: Int) -> Bool {
+//        let subSet = self.connected(a: inner, visited: IntSet(size: size, array: [a, b]))
+//
+//        let rest = self.nodes.set.subtracting(subSet)
+//
+//        var subGraph = self
+//        subGraph.remove(nodes: rest)
+//
+//        return subGraph.isContainLoops(a: a, b: b)
+//    }
+    
     private func isContainLoops(a: Int, b: Int) -> Bool {
         let indices = self.nodes.set.sequence
         
         var skipSet = IntSet(size: size)
         
-        for i in 0..<indices.count - 1 where !skipSet.contains(i) {
+        for ei in 0..<indices.count - 1 {
+            let i = indices[ei]
+            if skipSet.contains(i) {
+                continue
+            }
             let ni = nodes[i]
-            guard ni.count > 2 || i == a || i == b else {
+            assert(ni.count > 0)
+            let isEnd_i = i == a || i == b
+            guard ni.count > 2 || isEnd_i else {
                 continue
             }
             
-            for j in i + 1..<indices.count where !skipSet.contains(j) {
+            for ej in ei + 1..<indices.count {
+                let j = indices[ej]
+                if skipSet.contains(j) {
+                    continue
+                }
                 let nj = nodes[j]
-                guard nj.count > 2 || j == a || j == b else {
+                assert(nj.count > 0)
+                let isEnd_j = j == a || j == b
+                guard nj.count > 2 || isEnd_j else {
                     continue
                 }
                 
                 let subSets = self.split(a: i, b: j)
-                
+
                 let n = subSets.count
-                guard n >= 2 else {
+                
+                guard n > 1 else {
+                    continue
+                }
+
+                if isEnd_i || isEnd_j {
+                    if isEnd_i && isEnd_j || n != 2 {
+                        return true
+                    }
+
+                    let x = (a == i || a == j) ? b : a
+                    
+                    if var side = subSets.first(where: { $0.contains(x) }) {
+                        skipSet.formUnion(side)
+                        let m = isEnd_i ? j : i
+                        side.insert(m)
+                        
+                        let hasLoop = isContainLoops(a: x, b: m, subSet: side)
+                        if hasLoop {
+                            return true
+                        }
+                    }
                     continue
                 }
                 
-                let isEndA = i == a || i == b
-                let isEndB = j == a || j == b
-                
-                if isEndA || isEndB && (isEndA && isEndB || n == 3) {
-                    return true
+                guard !ni.contains(j) else {
+                    continue
                 }
 
+                guard n == 3 else {
+                    return true
+                }
+                
                 // иначе ищем центральный subset и добавляем его в посещенные
                 
                 if var middle = subSets.first(where: { !$0.contains(a) && $0.contains(b) }) {
+                    skipSet.formUnion(middle)
+                    
                     middle.insert(i)
                     middle.insert(j)
                     let hasLoop = isContainLoops(a: i, b: j, subSet: middle)
                     if hasLoop {
                         return true
                     }
-                    
-                    skipSet.formUnion(middle)
                 }
             }
         }

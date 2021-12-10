@@ -35,6 +35,14 @@ public struct Graph {
         }
     }
     
+    public init(edges: [Edge], size: Int) {
+        self.size = size
+        nodes = FixedList<IntSet>(size: size, empty: IntSet(size: size))
+        for edge in edges {
+            self.add(edge: edge)
+        }
+    }
+    
     public mutating func add(edge: Edge) {
         nodes[edge.a].insert(edge.b)
         nodes[edge.b].insert(edge.a)

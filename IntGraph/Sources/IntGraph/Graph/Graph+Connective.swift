@@ -78,4 +78,28 @@ public extension Graph {
         return visited
     }
     
+    func connected(a: Int, visited: IntSet) -> IntSet {
+        var visited = visited
+        var buffer = nodes[a].subtracting(visited)
+        visited.insert(a)
+        visited.formUnion(buffer)
+
+        var next = IntSet(size: size)
+        
+        while !buffer.isEmpty {
+            buffer.forEach { index in
+                next.formUnion(nodes.buffer[index])
+            }
+            buffer = next.subtracting(visited)
+            visited.formUnion(buffer)
+            next.removeAll()
+        }
+        
+        return visited
+    }
+//    
+//    func hasAnyConnectionBetween(set: IntSet, index: Int) -> Bool {
+//        any.contains(where: { nodes[$0].contains(where: index) })
+//    }
+    
 }

@@ -55,4 +55,38 @@ public extension Graph {
         }
     }
 
+    func isHamiltonianPathExistDirectSearch(a: Int, b: Int) -> Bool {
+        let n = self.size
+        
+        var solutions = [Solution(next: a, size: n)]
+        var buffer = [Solution]()
+
+        var i = 2
+        while i < n && !solutions.isEmpty {
+            for solution in solutions {
+                let node = self.nodes[solution.last]
+                node.forEach { x in
+                    if x != b && !solution.visited.contains(x) {
+                        buffer.append(Solution(next: x, solution: solution))
+                    }
+                }
+            }
+            
+            solutions = buffer
+            buffer.removeAll()
+            i += 1
+        }
+        
+        guard i == n && !solutions.isEmpty else {
+            return false
+        }
+        
+        for solution in solutions {
+            if nodes[solution.last].contains(b) {
+                return true
+            }
+        }
+        return false
+    }
+    
 }
