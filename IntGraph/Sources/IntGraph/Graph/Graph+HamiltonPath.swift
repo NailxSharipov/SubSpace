@@ -15,7 +15,31 @@ public extension Graph {
         guard self.isConnective(a: a, b: b) else {
             return false
         }
+        
+        return validatePath(a: a, b: b)
+    }
+   
+    private func isHamiltonianQualifiedVertices(a: Int, b: Int) -> Bool {
+        let isContain = nodes.contains(where: { index, node in
+            if index == a || index == b {
+                return node.count == 0
+            } else {
+                return node.count < 2
+            }
+        })
+        
+        return !isContain && nodes.count == size
+    }
 
+    private func isContainLoops(a: Int, b: Int, subSet: IntSet) -> Bool {
+        var subGraph = self
+        let rest = self.nodes.set.subtracting(subSet)
+        subGraph.remove(nodes: rest)
+        
+        return subGraph.isContainLoops(a: a, b: b)
+    }
+
+    private func validatePath(a: Int, b: Int) -> Bool {
         let indices = nodes.set.sequence
         var weakNodeSet = IntSet(size: size)
 
@@ -74,8 +98,8 @@ public extension Graph {
                 var subGraph = restGraph
                 subGraph.remove(nodes: subtract)
                 
-                let hasLoop = subGraph.isContainLoops(a: w0, b: w1)
-                if hasLoop {
+                let isValid = subGraph.validatePath(a: w0, b: w1)
+                if !isValid {
                     return false
                 }
                 subSet.remove(w1)
@@ -91,52 +115,17 @@ public extension Graph {
             next.removeAll()
         }
 
-        let hasLoop = restGraph.isContainLoops(a: w0, b: b)
+        let isValid = restGraph.validatePath(a: w0, b: b)
 
-        return !hasLoop
+        return isValid
     }
     
-    private func isHamiltonianQualifiedVertices(a: Int, b: Int) -> Bool {
-        let isContain = nodes.contains(where: { index, node in
-            if index == a || index == b {
-                return node.count == 0
-            } else {
-                return node.count < 2
-            }
-        })
-        
-        return !isContain && nodes.count == size
-    }
-
-    private func isContainLoops(a: Int, b: Int, subSet: IntSet) -> Bool {
-        var subGraph = self
-        let rest = self.nodes.set.subtracting(subSet)
-        subGraph.remove(nodes: rest)
-        
-        return subGraph.isContainLoops(a: a, b: b)
-    }
-    
-//    private func isContainLoops(a: Int, b: Int, inner: Int) -> Bool {
-//        let subSet = self.connected(a: inner, visited: IntSet(size: size, array: [a, b]))
-//
-//        let rest = self.nodes.set.subtracting(subSet)
-//
-//        var subGraph = self
-//        subGraph.remove(nodes: rest)
-//
-//        return subGraph.isContainLoops(a: a, b: b)
-//    }
-    
+    // rename
     private func isContainLoops(a: Int, b: Int) -> Bool {
         let indices = self.nodes.set.sequence
-        
-        var skipSet = IntSet(size: size)
-        
+
         for ei in 0..<indices.count - 1 {
             let i = indices[ei]
-            if skipSet.contains(i) {
-                continue
-            }
             let ni = nodes[i]
             assert(ni.count > 0)
             let isEnd_i = i == a || i == b
@@ -146,9 +135,6 @@ public extension Graph {
             
             for ej in ei + 1..<indices.count {
                 let j = indices[ej]
-                if skipSet.contains(j) {
-                    continue
-                }
                 let nj = nodes[j]
                 assert(nj.count > 0)
                 let isEnd_j = j == a || j == b
@@ -163,47 +149,92 @@ public extension Graph {
                 guard n > 1 else {
                     continue
                 }
-
-                if isEnd_i || isEnd_j {
-                    if isEnd_i && isEnd_j || n != 2 {
-                        return true
-                    }
-
-                    let x = (a == i || a == j) ? b : a
-                    
-                    if var side = subSets.first(where: { $0.contains(x) }) {
-                        skipSet.formUnion(side)
-                        let m = isEnd_i ? j : i
-                        side.insert(m)
-                        
-                        let hasLoop = isContainLoops(a: x, b: m, subSet: side)
-                        if hasLoop {
-                            return true
-                        }
-                    }
-                    continue
-                }
                 
-                guard !ni.contains(j) else {
-                    continue
-                }
-
-                guard n == 3 else {
+                let isOneEnd = isEnd_i || isEnd_j
+                let isTwoEnd = isEnd_i && isEnd_j
+                
+                if n > 3 || n > 2 && isOneEnd || isTwoEnd {
                     return true
                 }
                 
-                // иначе ищем центральный subset и добавляем его в посещенные
+                struct SubSetData {
+                    let a: Int
+                    let b: Int
+                    let subSet: IntSet
+                }
                 
-                if var middle = subSets.first(where: { !$0.contains(a) && $0.contains(b) }) {
-                    skipSet.formUnion(middle)
+                var subSetData = [SubSetData]()
+                subSetData.reserveCapacity(subSets.count)
+                
+                var iCount = 0
+                var jCount = 0
+                var ijCount = 0
+                
+                // each of subset must have Hamilton path
+                for k in 0..<subSets.count {
+                    var subSet = subSets[k]
+
+                    var isXi = false
+                    var isXj = false
                     
-                    middle.insert(i)
-                    middle.insert(j)
-                    let hasLoop = isContainLoops(a: i, b: j, subSet: middle)
-                    if hasLoop {
+                    for s in subSet.sequence {
+                        let n = nodes[s]
+                        if !isXi && n.contains(i) {
+                            subSet.insert(i)
+                            isXi = true
+                        }
+                        if !isXj && n.contains(j) {
+                            isXj = true
+                            subSet.insert(j)
+                        }
+                    }
+                    
+                    // is contain all nodes except ends
+                    if subSet.count == nodes.count - 2 && !subSet.contains(a) && !subSet.contains(b) {
+                        var subGraph = self
+                        subGraph.removeNode(index: a)
+                        subGraph.removeNode(index: b)
+                        let isHamiltonPath = subGraph.validatePath(a: i, b: j)
+                        if !isHamiltonPath {
+                            return true
+                        }
+                        
+                        return false
+                    }
+                    
+                    assert(isXi || isXj)
+                    
+                    if isXi && isXj {
+                        subSetData.append(.init(a: i, b: j, subSet: subSet))
+                        ijCount += 1
+                    } else {
+                        let c = subSet.contains(a) ? a : b
+                        if isXi {
+                            iCount += 1
+                            subSetData.append(.init(a: i, b: c, subSet: subSet))
+                        } else {
+                            jCount += 1
+                            subSetData.append(.init(a: j, b: c, subSet: subSet))
+                        }
+                    }
+                }
+                
+                if iCount > 1 || jCount > 1 {
+                    return true
+                }
+
+                for item in subSetData {
+                    let subtract = self.nodes.set.subtracting(item.subSet)
+                    var subGraph = self
+                    subGraph.remove(nodes: subtract)
+
+                    let isHamiltonPath = subGraph.validatePath(a: item.a, b: item.b)
+                    if !isHamiltonPath {
                         return true
                     }
                 }
+                
+                return false
             }
         }
 

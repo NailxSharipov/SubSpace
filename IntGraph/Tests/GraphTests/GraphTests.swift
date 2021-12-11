@@ -127,8 +127,8 @@ final class GraphTests: XCTestCase {
 //        XCTAssertFalse(graph.isHamiltonianPathExist(a: 1, b: 4))
 //        XCTAssertFalse(graph.isHamiltonianPathExist(a: 0, b: 2))
         XCTAssertTrue(graph.isHamiltonianPathExist(a: 1, b: 3))
-        XCTAssertTrue(graph.isHamiltonianPathExist(a: 1, b: 2))
-        XCTAssertTrue(graph.isHamiltonianPathExist(a: 2, b: 3))
+//        XCTAssertTrue(graph.isHamiltonianPathExist(a: 1, b: 2))
+//        XCTAssertTrue(graph.isHamiltonianPathExist(a: 2, b: 3))
     }
     
     func test_hamiltoPath_06() {
