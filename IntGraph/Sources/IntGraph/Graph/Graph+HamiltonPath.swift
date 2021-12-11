@@ -5,240 +5,304 @@
 //  Created by Nail Sharipov on 27.11.2021.
 //
 
+private struct Branch {
+    var a: Int
+    var b: Int
+    var graph: Graph
+}
+
 public extension Graph {
     
     func isHamiltonianPathExist(a: Int, b: Int) -> Bool {
-        guard self.isHamiltonianQualifiedVertices(a: a, b: b) else {
+        guard self.validateVertices(a: a, b: b) else {
             return false
         }
 
-        guard self.isConnective(a: a, b: b) else {
+        let connected = self.connected(a: a)
+        guard connected.contains(b) && connected.count == self.size else {
             return false
         }
         
-        return validatePath(a: a, b: b)
+        return discover(a: a, b: b)
     }
-   
-    private func isHamiltonianQualifiedVertices(a: Int, b: Int) -> Bool {
-        let isContain = nodes.contains(where: { index, node in
-            if index == a || index == b {
+
+    @inline(__always)
+    func validateVertices(a: Int, b: Int) -> Bool {
+        let hasLeaf = nodes.contains(where: { index, node in
+            if index == a || index == b { // special rule for ends
                 return node.count == 0
             } else {
                 return node.count < 2
             }
         })
-        
-        return !isContain && nodes.count == size
+        return !hasLeaf
     }
-
-    private func isContainLoops(a: Int, b: Int, subSet: IntSet) -> Bool {
-        var subGraph = self
-        let rest = self.nodes.set.subtracting(subSet)
-        subGraph.remove(nodes: rest)
+    
+    private func discover(a: Int, b: Int) -> Bool {
+        var branches = [Branch]()
+        branches.append(Branch(a: a, b: b, graph: self))
         
-        return subGraph.isContainLoops(a: a, b: b)
+        var buffer = [Branch]()
+        
+        repeat {
+            for var branch in branches {
+                let result = branch.discover()
+                switch result {
+                case .valid:
+                    continue
+                case .notValid:
+                    return false
+                case .subBranches(let branches):
+                    buffer.append(contentsOf: branches)
+                }
+            }
+            branches = buffer
+            buffer.removeAll()
+        } while !branches.isEmpty
+
+        return true
     }
+}
 
-    private func validatePath(a: Int, b: Int) -> Bool {
-        let indices = nodes.set.sequence
-        var weakNodeSet = IntSet(size: size)
+private extension Branch {
+    
+    enum Result {
+        case valid
+        case notValid
+        case subBranches([Branch])
+    }
+    
+    mutating func discover() -> Result {
+        guard graph.validateVertices(a: a, b: b) else {
+            return .notValid
+        }
 
+        self.removeEnds()
+
+        guard graph.nodes.count > 2 else {
+            return .valid
+        }
+        
+        guard a != b else {
+            return .notValid
+        }
+        
+        guard self.discoverEnds() else {
+            return .notValid
+        }
+
+        var indices = [Int]()
+        graph.nodes.forEachIndex { i in
+            if graph.nodes[i].count > 2 && a != i && b != i {
+                indices.append(i)
+            }
+        }
+        
+        guard !indices.isEmpty else {
+            return .valid
+        }
+
+        let endResult = self.discoverSide(indices: indices)
+        switch endResult {
+        case .valid:
+            break
+        default:
+            return endResult
+        }
+
+        let middleResult = self.discoverMiddle(indices: indices)
+        switch middleResult {
+        case .valid:
+            break
+        default:
+            return middleResult
+        }
+
+        return .valid
+    }
+    
+    func discoverEnds() -> Bool {
+        let subSets = graph.split(a: a, b: b)
+        guard subSets.count <= 1 else {
+            return false
+        }
+        
+        guard subSets.count == 1 else {
+            return true
+        }
+        
+        var isConainA = false
+        var isConainB = false
+        
+        subSets[0].forEach { i in
+            let node = graph.nodes[i]
+            isConainA = isConainA || node.contains(a)
+            isConainB = isConainB || node.contains(b)
+        }
+
+        return isConainA && isConainB
+    }
+    
+    func discoverSide(indices: [Int]) -> Result {
         for i in indices {
-            let subSets = self.split(node: i)
-            guard i != a && i != b else {
-                let opposite = i == a ? b : a
-                if subSets.contains(where: { !$0.contains(opposite) }) {
-                    return false
-                }
-                
-                continue
+            let aib = self.split(a: a, b: b, x: i)
+            switch aib {
+            case .valid:
+                break
+            default:
+                return aib
             }
             
-            guard subSets.count <= 2, !subSets.contains(where: { !($0.contains(a) || $0.contains(b)) }) else {
-                return false
-            }
-            
-            if subSets.count == 2, nodes[i].count > 2 {
-                weakNodeSet.insert(i)
+            let bia = self.split(a: b, b: a, x: i)
+            switch bia {
+            case .valid:
+                break
+            default:
+                return bia
             }
         }
 
-        guard weakNodeSet.count > 0 else {
-            let hasLoop = self.isContainLoops(a: a, b: b)
-            return !hasLoop
-        }
-        
-        // break original graph into sub graphs a ... w0 ... w1 ... wN ... b
-        
-        weakNodeSet.remove(a)  // remove !!!
-        weakNodeSet.remove(b)  // remove !!!
-        var w0 = a
-        
-        var buffer = nodes[a]
-        var visited = IntSet(size: size)
-        visited.insert(a)
-        visited.formUnion(buffer)
-        
-        var next = IntSet(size: size)
-        var restGraph = self
-
-        while !weakNodeSet.isEmpty {
-            let common = buffer.intersection(weakNodeSet)
-            if common.isEmpty {
-                buffer.forEach { index in
-                    next.formUnion(nodes.buffer[index])
-                }
-                buffer = next.subtracting(visited)
-                visited.formUnion(buffer)
-            } else {
-                let w1 = common.first
-                
-                var subSet = restGraph.connected(a: w0, visited: IntSet(size: size, array: [w0, w1]))
-                let subtract = restGraph.nodes.set.subtracting(subSet)
-                var subGraph = restGraph
-                subGraph.remove(nodes: subtract)
-                
-                let isValid = subGraph.validatePath(a: w0, b: w1)
-                if !isValid {
-                    return false
-                }
-                subSet.remove(w1)
-                restGraph.remove(nodes: subSet)
-                
-                
-                visited.formUnion(subSet)
-                buffer = nodes[w1].subtracting(visited)
-                
-                w0 = w1
-                weakNodeSet.remove(w1)
-            }
-            next.removeAll()
-        }
-
-        let isValid = restGraph.validatePath(a: w0, b: b)
-
-        return isValid
+        return .valid
     }
     
-    // rename
-    private func isContainLoops(a: Int, b: Int) -> Bool {
-        let indices = self.nodes.set.sequence
-
-        for ei in 0..<indices.count - 1 {
-            let i = indices[ei]
-            let ni = nodes[i]
-            assert(ni.count > 0)
-            let isEnd_i = i == a || i == b
-            guard ni.count > 2 || isEnd_i else {
-                continue
+    private func split(a: Int, b: Int, x: Int) -> Result {
+        let subSets = graph.split(a: a, b: x)
+        switch subSets.count {
+        case 1:
+            return .valid
+        case 2:
+            guard let bIndex = subSets.firstIndex(where: { $0.contains(b) }) else {
+                return .notValid
             }
+
+            var branches = [Branch]()
             
-            for ej in ei + 1..<indices.count {
-                let j = indices[ej]
-                let nj = nodes[j]
-                assert(nj.count > 0)
-                let isEnd_j = j == a || j == b
-                guard nj.count > 2 || isEnd_j else {
-                    continue
-                }
-                
-                let subSets = self.split(a: i, b: j)
-
-                let n = subSets.count
-                
-                guard n > 1 else {
-                    continue
-                }
-                
-                let isOneEnd = isEnd_i || isEnd_j
-                let isTwoEnd = isEnd_i && isEnd_j
-                
-                if n > 3 || n > 2 && isOneEnd || isTwoEnd {
-                    return true
-                }
-                
-                struct SubSetData {
-                    let a: Int
-                    let b: Int
-                    let subSet: IntSet
-                }
-                
-                var subSetData = [SubSetData]()
-                subSetData.reserveCapacity(subSets.count)
-                
-                var iCount = 0
-                var jCount = 0
-                var ijCount = 0
-                
-                // each of subset must have Hamilton path
-                for k in 0..<subSets.count {
-                    var subSet = subSets[k]
-
-                    var isXi = false
-                    var isXj = false
-                    
-                    for s in subSet.sequence {
-                        let n = nodes[s]
-                        if !isXi && n.contains(i) {
-                            subSet.insert(i)
-                            isXi = true
-                        }
-                        if !isXj && n.contains(j) {
-                            isXj = true
-                            subSet.insert(j)
+            // a - x
+            let bSubset = subSets[bIndex]
+            var aSubGraph = graph
+            aSubGraph.remove(nodes: bSubset)
+            
+//            if graph.nodes.count > 3 {
+//
+//            }
+            branches.append(Branch(a: a, b: x, graph: aSubGraph))
+            
+            // x - b
+            let aIndex = (bIndex + 1) % 2
+            let aSubset = subSets[aIndex]
+            var bSubGraph = graph
+            bSubGraph.remove(nodes: aSubset)
+            bSubGraph.removeNode(index: a)
+            branches.append(Branch(a: x, b: b, graph: bSubGraph))
+            
+            return .subBranches(branches)
+        default:
+            return .notValid
+        }
+    }
+    
+    func discoverMiddle(indices: [Int]) -> Result {
+        let n = indices.count
+        for i in 0..<n - 1 {
+            let x0 = indices[i]
+            for j in i + 1..<n {
+                let x1 = indices[j]
+                let subSets = graph.split(a: x0, b: x1)
+                switch subSets.count {
+                case 1:
+                    return .valid
+                case 2, 3:
+                    var mIndex = Int.empty
+                    for index in 0..<subSets.count {
+                        let subSet = subSets[index]
+                        if !subSet.contains(a) && !subSet.contains(b) {
+                            if mIndex == .empty {
+                                mIndex = index
+                            } else {
+                                // must be only one
+                                return .notValid
+                            }
                         }
                     }
                     
-                    // is contain all nodes except ends
-                    if subSet.count == nodes.count - 2 && !subSet.contains(a) && !subSet.contains(b) {
-                        var subGraph = self
-                        subGraph.removeNode(index: a)
-                        subGraph.removeNode(index: b)
-                        let isHamiltonPath = subGraph.validatePath(a: i, b: j)
-                        if !isHamiltonPath {
-                            return true
-                        }
+                    var branches = [Branch]()
+                    
+                    // for middle
+                    if mIndex != .empty {
+                        var subSet = subSets[mIndex]
+                        subSet.insert(x0)
+                        subSet.insert(x1)
+                        let subtract = graph.nodes.set.subtracting(subSet)
+                        var subGraph = graph
+                        subGraph.remove(nodes: subtract)
                         
-                        return false
-                    }
-                    
-                    assert(isXi || isXj)
-                    
-                    if isXi && isXj {
-                        subSetData.append(.init(a: i, b: j, subSet: subSet))
-                        ijCount += 1
+                        branches.append(Branch(a: x0, b: x1, graph: subGraph))
                     } else {
-                        let c = subSet.contains(a) ? a : b
-                        if isXi {
-                            iCount += 1
-                            subSetData.append(.init(a: i, b: c, subSet: subSet))
+                        assert(subSets.count == 2)
+                    }
+                    
+                    // for side
+                    for index in 0..<subSets.count where index != mIndex {
+                        var subSet = subSets[index]
+                        guard subSet.count > 1 else { continue }
+                        
+                        let c: Int
+                        if subSet.contains(a) {
+                            c = a
                         } else {
-                            jCount += 1
-                            subSetData.append(.init(a: j, b: c, subSet: subSet))
+                            assert(subSet.contains(b))
+                            c = b
                         }
+
+                        let node = graph.nodes[c]
+                        let x = node.contains(x0) ? x1 : x0
+
+                        subSet.insert(x)
+                        let subtract = graph.nodes.set.subtracting(subSet)
+                        var subGraph = graph
+                        subGraph.remove(nodes: subtract)
+
+                        branches.append(Branch(a: c, b: x, graph: subGraph))
                     }
+                    
+                default:
+                    return .notValid
                 }
                 
-                if iCount > 1 || jCount > 1 {
-                    return true
-                }
-
-                for item in subSetData {
-                    let subtract = self.nodes.set.subtracting(item.subSet)
-                    var subGraph = self
-                    subGraph.remove(nodes: subtract)
-
-                    let isHamiltonPath = subGraph.validatePath(a: item.a, b: item.b)
-                    if !isHamiltonPath {
-                        return true
-                    }
-                }
-                
-                return false
             }
         }
 
-        return false
+        return .valid
     }
     
+    
+    func discover(indices: [Int]) -> Result {
+        
+        return .valid
+    }
+
+    private mutating func removeEnds() {
+        var ax = a
+        var node = graph.nodes[ax]
+        while node.count < 2 && graph.nodes.count > 2 && node.first != b {
+            graph.removeNode(index: ax)
+            ax = node.first
+            node = graph.nodes[ax]
+        }
+        if ax != a {
+            a = ax
+        }
+        
+        var bx = b
+        node = graph.nodes[bx]
+        while node.count < 2 && graph.nodes.count > 2 && node.first != a {
+            graph.removeNode(index: bx)
+            bx = node.first
+            node = graph.nodes[bx]
+        }
+        if bx != b {
+            b = bx
+        }
+    }
+
 }

@@ -25,6 +25,7 @@ public struct IntSet {
         firstIndex
     }
 
+    @inline(__always)
     public var sequence: [Int] {
         var result = [Int]()
         result.reserveCapacity(count)
@@ -133,6 +134,7 @@ public struct IntSet {
         }
     }
     
+    @inline(__always)
     public func first(where predicate: (Int) -> (Bool)) -> Int {
         var index = firstIndex
         while index != .empty {
@@ -145,6 +147,7 @@ public struct IntSet {
         return .empty
     }
     
+    @inline(__always)
     public mutating func formUnion(_ set: IntSet) {
         var index = set.firstIndex
         while index != .empty {
@@ -153,12 +156,14 @@ public struct IntSet {
         }
     }
     
+    @inline(__always)
     public func union(_ set: IntSet) -> IntSet {
         var result = self
         result.formUnion(set)
         return result
     }
     
+    @inline(__always)
     public mutating func subtract(_ set: IntSet) {
         var index = set.firstIndex
         while index != .empty {
@@ -167,12 +172,14 @@ public struct IntSet {
         }
     }
     
+    @inline(__always)
     public func subtracting(_ set: IntSet) -> IntSet {
         var result = self
         result.subtract(set)
         return result
     }
 
+    @inline(__always)
     public mutating func intersect(_ set: IntSet) {
         var index = self.firstIndex
         while index != .empty {
@@ -184,12 +191,14 @@ public struct IntSet {
         }
     }
     
+    @inline(__always)
     public func intersection(_ set: IntSet) -> IntSet {
         var result = self
         result.intersect(set)
         return result
     }
     
+    @inline(__always)
     public func forEach(_ body: (Int) -> ()) {
         var index = firstIndex
         while index != .empty {
@@ -198,6 +207,7 @@ public struct IntSet {
         }
     }
 
+    @inline(__always)
     public mutating func removeAll() {
         var index = firstIndex
         while index != .empty {

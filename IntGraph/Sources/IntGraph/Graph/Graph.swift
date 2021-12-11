@@ -9,6 +9,7 @@ public struct Graph {
 
     public private (set) var size: Int
     
+    @inline(__always)
     public func isExist(edge: Edge) -> Bool {
         nodes[edge.a].contains(edge.b)
     }
@@ -43,16 +44,19 @@ public struct Graph {
         }
     }
     
+    @inline(__always)
     public mutating func add(edge: Edge) {
         nodes[edge.a].insert(edge.b)
         nodes[edge.b].insert(edge.a)
     }
     
+    @inline(__always)
     mutating func add(edge: SortedEdge) {
         nodes[edge.a].insert(edge.b)
         nodes[edge.b].insert(edge.a)
     }
     
+    @inline(__always)
     public mutating func removeNode(index: Int) {
         nodes.forEachIndex { i in
             nodes[i].remove(index)
@@ -60,6 +64,7 @@ public struct Graph {
         nodes.remove(index)
     }
     
+    @inline(__always)
     public mutating func remove(nodes set: IntSet) {
         nodes.forEachIndex { i in
             nodes[i].subtract(set)
@@ -69,6 +74,7 @@ public struct Graph {
         }
     }
     
+    @inline(__always)
     public mutating func removeAll() {
         nodes.removeAll()
     }

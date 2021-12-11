@@ -17,8 +17,10 @@ public struct FixedList<T> {
     public private (set) var set: IntSet
     public private (set) var buffer: [T]
 
+    @inline(__always)
     public var count: Int { self.set.count }
     
+    @inline(__always)
     public var first: T? {
         let index = set.first
         if index != .empty {
@@ -28,6 +30,7 @@ public struct FixedList<T> {
         }
     }
 
+    @inline(__always)
     public var sequence: [T] {
         var result = [T]()
         result.reserveCapacity(count)
@@ -36,9 +39,11 @@ public struct FixedList<T> {
         }
         return result
     }
-    
+
+    @inline(__always)
     public var indices: [Int] { self.set.sequence }
 
+    @inline(__always)
     public subscript(index: Int) -> T {
         get {
             return buffer[index]
@@ -87,6 +92,7 @@ public struct FixedList<T> {
         return false
     }
     
+    @inline(__always)
     public mutating func insert(_ index: Int, value: T) {
         assert(index < buffer.count)
         
@@ -94,6 +100,7 @@ public struct FixedList<T> {
         set.insert(index)
     }
 
+    @inline(__always)
     public mutating func remove(_ index: Int) {
         assert(index < buffer.count)
         guard set.contains(index) else { return }
@@ -103,6 +110,7 @@ public struct FixedList<T> {
         set.remove(index)
     }
     
+    @inline(__always)
     public mutating func removeAll() {
         set.removeAll()
         for i in 0..<buffer.count {

@@ -7,6 +7,7 @@
 
 public extension Graph {
     
+    @inline(__always)
     var isConective: Bool {
         guard self.nodes.count > 1 else { return true }
         guard let node = nodes.first else { return true }
@@ -97,9 +98,4 @@ public extension Graph {
         
         return visited
     }
-//    
-//    func hasAnyConnectionBetween(set: IntSet, index: Int) -> Bool {
-//        any.contains(where: { nodes[$0].contains(where: index) })
-//    }
-    
 }
