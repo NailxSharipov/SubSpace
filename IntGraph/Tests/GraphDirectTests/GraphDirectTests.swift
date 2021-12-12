@@ -78,23 +78,5 @@ final class GraphDirectTests: XCTestCase {
 
         XCTAssertTrue(graph.isHamiltonianPathExistDirectSearch(a: 0, b: 5))
     }
-    
-    func test_hamilton_path_search_random() throws {
-        let size = 10
-        for _ in 0..<1000 {
-            var edges = [Edge]()
-            
-            for _ in 0...25 {
-                let a = Int.random(in: 0..<size)
-                let b = Int.random(in: 0..<size)
-                edges.append(Edge(a: a, b: b))
-            }
-            
-            let graph = Graph(edges: edges)
-            if let path = graph.findHamiltonianPathDirectSearch(a: 0, b: size - 1) {
-                XCTAssertEqual(Set(path).count, size)
-            }
-        }
-    }
-    
+   
 }

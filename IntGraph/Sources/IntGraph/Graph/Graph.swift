@@ -24,6 +24,11 @@ public struct Graph {
         }
     }
     
+    public init(size: Int) {
+        self.size = size
+        self.nodes = FixedList<IntSet>(size: size, empty: IntSet(size: size))
+    }
+    
     public init(edges: [Edge]) {
         var m = -1
         for edge in edges where edge.a > m || edge.b > m {
@@ -54,6 +59,13 @@ public struct Graph {
     mutating func add(edge: SortedEdge) {
         nodes[edge.a].insert(edge.b)
         nodes[edge.b].insert(edge.a)
+    }
+    
+    @inline(__always)
+    public mutating func add(edges: [Edge]) {
+        for edge in edges {
+            self.add(edge: edge)
+        }
     }
     
     @inline(__always)

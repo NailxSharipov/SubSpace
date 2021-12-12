@@ -37,27 +37,27 @@ public extension Graph {
         return visited.count == count
     }
     
-    func isConnective(a: Int, b: Int) -> Bool {
-        guard nodes.contains(a) && nodes.contains(b) else { return false }
-        
-        var buffer = nodes[a]
-        var visited = IntSet(size: size)
-        visited.insert(a)
-        visited.formUnion(buffer)
-
-        var next = IntSet(size: size)
-        
-        while !visited.contains(b) && !buffer.isEmpty {
-            buffer.forEach { index in
-                next.formUnion(nodes.buffer[index])
-            }
-            buffer = next.subtracting(visited)
-            visited.formUnion(buffer)
-            next.removeAll()
-        }
-        
-        return visited.contains(b)
-    }
+//    func isConnective(a: Int, b: Int) -> Bool {
+//        guard nodes.contains(a) && nodes.contains(b) else { return false }
+//        
+//        var buffer = nodes[a]
+//        var visited = IntSet(size: size)
+//        visited.insert(a)
+//        visited.formUnion(buffer)
+//
+//        var next = IntSet(size: size)
+//        
+//        while !visited.contains(b) && !buffer.isEmpty {
+//            buffer.forEach { index in
+//                next.formUnion(nodes.buffer[index])
+//            }
+//            buffer = next.subtracting(visited)
+//            visited.formUnion(buffer)
+//            next.removeAll()
+//        }
+//        
+//        return visited.contains(b)
+//    }
 
     func connected(a: Int) -> IntSet {
         var buffer = nodes[a]
