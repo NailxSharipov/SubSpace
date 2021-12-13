@@ -177,9 +177,12 @@ private extension Branch {
             let spike = spikes[0]
             assert(spike.isA || spike.isB)
             var subGraph = self.graph
-            subGraph.removeNode(index: spike.index)
+            
            
             if spike.isA && spike.isB {
+                subGraph.removeNode(index: spike.index)
+                subGraph.removeNode(index: a)
+                subGraph.removeNode(index: b)
                 // merge all into a
                 graph.nodes[a].forEach { i in
                     if i != spike.index && i != b {
@@ -200,6 +203,7 @@ private extension Branch {
                 }
             } else if spike.isA {
                 subGraph.removeNode(index: a)
+                subGraph.removeNode(index: spike.index)
                 if subGraph.nodes.count > 3 {
                     return .subBranches([Branch(a: spike.neighbor, b: b, graph: subGraph)])
                 } else {
@@ -208,8 +212,9 @@ private extension Branch {
             } else {
                 assert(spike.isB)
                 subGraph.removeNode(index: b)
+                subGraph.removeNode(index: spike.index)
                 if subGraph.nodes.count > 3 {
-                    return .subBranches([Branch(a: b, b: spike.neighbor, graph: subGraph)])
+                    return .subBranches([Branch(a: a, b: spike.neighbor, graph: subGraph)])
                 } else {
                     return .valid
                 }

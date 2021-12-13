@@ -300,6 +300,21 @@ final class GraphTests: XCTestCase {
     func test_hamiltoPath_19() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
+            Edge(a: 0, b: 5),
+            Edge(a: 1, b: 3),
+            Edge(a: 1, b: 4),
+            Edge(a: 2, b: 3),
+            Edge(a: 2, b: 5),
+            Edge(a: 3, b: 4),
+            Edge(a: 5, b: 6)
+        ])
+
+        XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 6))
+    }
+    
+    func test_hamiltoPath_20() {
+        let graph = Graph(edges: [
+            Edge(a: 0, b: 1),
             Edge(a: 0, b: 6),
             Edge(a: 1, b: 2),
             Edge(a: 1, b: 3),
