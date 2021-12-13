@@ -10,7 +10,7 @@ import IntGraph
 
 print("start")
 
-let n: Int = 6
+let n: Int = 5
 let max: UInt64 = 1 << ((n - 1) * n + 1)
 
 let threadsFactor: UInt64 = 3 // power of 2

@@ -146,7 +146,7 @@ final class GraphTests: XCTestCase {
     
     func test_hamiltoPath_07() {
         let graph = Graph(edges: [
-            Edge(a: 1, b: 0),
+            Edge(a: 0, b: 1),
             Edge(a: 1, b: 2),
             Edge(a: 1, b: 3),
             Edge(a: 1, b: 4),
@@ -284,6 +284,22 @@ final class GraphTests: XCTestCase {
     func test_hamiltoPath_18() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
+            Edge(a: 0, b: 2),
+            Edge(a: 0, b: 3),
+            Edge(a: 1, b: 2),
+            Edge(a: 1, b: 5),
+            Edge(a: 2, b: 4),
+            Edge(a: 3, b: 4),
+            Edge(a: 3, b: 5),
+            Edge(a: 5, b: 6)
+        ])
+
+        XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 6))
+    }
+
+    func test_hamiltoPath_19() {
+        let graph = Graph(edges: [
+            Edge(a: 0, b: 1),
             Edge(a: 0, b: 6),
             Edge(a: 1, b: 2),
             Edge(a: 1, b: 3),
@@ -300,5 +316,243 @@ final class GraphTests: XCTestCase {
         ])
         
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 0, b: 5))
+    }
+    
+    
+    func test_Herschel_graph_00() {
+        let graph = Graph(edges: [
+            Edge(a: 0, b: 1),
+            Edge(a: 0, b: 4),
+            Edge(a: 0, b: 6),
+            
+            Edge(a: 1, b: 2),
+            Edge(a: 1, b: 3),
+            
+            Edge(a: 2, b: 4),
+            Edge(a: 2, b: 5),
+            
+            Edge(a: 3, b: 5),
+            Edge(a: 3, b: 6),
+            
+            Edge(a: 4, b: 7),
+            Edge(a: 4, b: 10),
+
+            Edge(a: 5, b: 7),
+            Edge(a: 5, b: 8),
+            
+            Edge(a: 6, b: 8),
+            Edge(a: 6, b: 10),
+            
+            Edge(a: 7, b: 9),
+            
+            Edge(a: 8, b: 9),
+            
+            Edge(a: 9, b: 10)
+        ])
+        
+        XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 10))
+        XCTAssertFalse(graph.isHamiltonianPathExist(a: 4, b: 6))
+    }
+    
+    func test_Herschel_graph_01() {
+        let graph = Graph(edges: [
+            Edge(a: 0, b: 1),
+            Edge(a: 0, b: 6),
+            
+            Edge(a: 1, b: 2),
+            Edge(a: 1, b: 3),
+            
+            Edge(a: 2, b: 4),
+            Edge(a: 2, b: 5),
+            
+            Edge(a: 3, b: 5),
+            Edge(a: 3, b: 6),
+            
+            Edge(a: 4, b: 7),
+            Edge(a: 4, b: 10),
+
+            Edge(a: 5, b: 7),
+            Edge(a: 5, b: 8),
+            
+            Edge(a: 6, b: 8),
+            Edge(a: 6, b: 10),
+            
+            Edge(a: 7, b: 9),
+            
+            Edge(a: 8, b: 9),
+            
+            Edge(a: 9, b: 10)
+        ])
+        
+        XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 10))
+        XCTAssertFalse(graph.isHamiltonianPathExist(a: 4, b: 6))
+    }
+    
+    func test_Herschel_graph_02() {
+        let graph = Graph(edges: [
+            Edge(a: 0, b: 1),
+            Edge(a: 0, b: 4),
+            
+            Edge(a: 1, b: 2),
+            Edge(a: 1, b: 3),
+            
+            Edge(a: 2, b: 4),
+            Edge(a: 2, b: 5),
+            
+            Edge(a: 3, b: 5),
+            Edge(a: 3, b: 6),
+            
+            Edge(a: 4, b: 7),
+            Edge(a: 4, b: 10),
+
+            Edge(a: 5, b: 7),
+            Edge(a: 5, b: 8),
+            
+            Edge(a: 6, b: 8),
+            Edge(a: 6, b: 10),
+            
+            Edge(a: 7, b: 9),
+            
+            Edge(a: 8, b: 9),
+            
+            Edge(a: 9, b: 10)
+        ])
+        
+        XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 10))
+        XCTAssertFalse(graph.isHamiltonianPathExist(a: 4, b: 6))
+    }
+    
+    func test_Herschel_graph_03() {
+        let graph = Graph(edges: [
+            Edge(a: 0, b: 1),
+            Edge(a: 0, b: 4),
+            Edge(a: 0, b: 6),
+            
+            Edge(a: 1, b: 2),
+            Edge(a: 1, b: 3),
+            
+            Edge(a: 2, b: 4),
+            Edge(a: 2, b: 5),
+            
+            Edge(a: 3, b: 5),
+            Edge(a: 3, b: 6),
+            
+            Edge(a: 4, b: 7),
+
+            Edge(a: 5, b: 7),
+            Edge(a: 5, b: 8),
+            
+            Edge(a: 6, b: 8),
+            Edge(a: 6, b: 10),
+            
+            Edge(a: 7, b: 9),
+            
+            Edge(a: 8, b: 9),
+            
+            Edge(a: 9, b: 10)
+        ])
+        
+        XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 10))
+        XCTAssertFalse(graph.isHamiltonianPathExist(a: 4, b: 6))
+    }
+    
+    func test_Herschel_graph_04() {
+        let graph = Graph(edges: [
+            Edge(a: 0, b: 1),
+            Edge(a: 0, b: 4),
+            Edge(a: 0, b: 6),
+            
+            Edge(a: 1, b: 2),
+            Edge(a: 1, b: 3),
+            
+            Edge(a: 2, b: 4),
+            Edge(a: 2, b: 5),
+            
+            Edge(a: 3, b: 5),
+            Edge(a: 3, b: 6),
+            
+            Edge(a: 4, b: 7),
+            Edge(a: 4, b: 10),
+
+            Edge(a: 5, b: 7),
+            Edge(a: 5, b: 8),
+            
+            Edge(a: 6, b: 8),
+            
+            Edge(a: 7, b: 9),
+            
+            Edge(a: 8, b: 9),
+            
+            Edge(a: 9, b: 10)
+        ])
+        
+        XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 10))
+        XCTAssertFalse(graph.isHamiltonianPathExist(a: 4, b: 6))
+    }
+    
+    func test_Herschel_graph_05() {
+        let graph = Graph(edges: [
+            Edge(a: 0, b: 1),
+            Edge(a: 0, b: 6),
+            
+            Edge(a: 1, b: 2),
+            Edge(a: 1, b: 3),
+            
+            Edge(a: 2, b: 4),
+            Edge(a: 2, b: 5),
+            
+            Edge(a: 3, b: 5),
+            Edge(a: 3, b: 6),
+            
+            Edge(a: 4, b: 7),
+            Edge(a: 4, b: 10),
+
+            Edge(a: 5, b: 7),
+            Edge(a: 5, b: 8),
+            
+            Edge(a: 6, b: 8),
+            
+            Edge(a: 7, b: 9),
+            
+            Edge(a: 8, b: 9),
+            
+            Edge(a: 9, b: 10)
+        ])
+        
+        XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 10))
+        XCTAssertFalse(graph.isHamiltonianPathExist(a: 4, b: 6))
+    }
+    
+    func test_Herschel_graph_06() {
+        let graph = Graph(edges: [
+            Edge(a: 0, b: 1),
+            Edge(a: 0, b: 4),
+            
+            Edge(a: 1, b: 2),
+            Edge(a: 1, b: 3),
+            
+            Edge(a: 2, b: 4),
+            Edge(a: 2, b: 5),
+            
+            Edge(a: 3, b: 5),
+            Edge(a: 3, b: 6),
+            
+            Edge(a: 4, b: 7),
+
+            Edge(a: 5, b: 7),
+            Edge(a: 5, b: 8),
+            
+            Edge(a: 6, b: 8),
+            Edge(a: 6, b: 10),
+            
+            Edge(a: 7, b: 9),
+            
+            Edge(a: 8, b: 9),
+            
+            Edge(a: 9, b: 10)
+        ])
+        
+        XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 10))
+        XCTAssertFalse(graph.isHamiltonianPathExist(a: 4, b: 6))
     }
 }
