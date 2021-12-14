@@ -57,7 +57,7 @@ final class GraphTests: XCTestCase {
         XCTAssertTrue(graph.isConective)
     }
     
-    func test_hamiltoPath_00() {
+    func test_simple_00() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1)
         ])
@@ -65,7 +65,7 @@ final class GraphTests: XCTestCase {
         XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 1))
     }
     
-    func test_hamiltoPath_01() {
+    func test_simple_01() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 1, b: 2)
@@ -76,7 +76,7 @@ final class GraphTests: XCTestCase {
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 1, b: 2))
     }
 
-    func test_hamiltoPath_02() {
+    func test_simple_02() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 2),
@@ -88,7 +88,7 @@ final class GraphTests: XCTestCase {
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 3, b: 1))
     }
     
-    func test_hamiltoPath_03() {
+    func test_simple_03() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 2),
@@ -100,7 +100,7 @@ final class GraphTests: XCTestCase {
         XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 1))
     }
     
-    func test_hamiltoPath_04() {
+    func test_simple_04() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 2),
@@ -113,7 +113,7 @@ final class GraphTests: XCTestCase {
         XCTAssertTrue(graph.isHamiltonianPathExist(a: 2, b: 3))
     }
     
-    func test_hamiltoPath_05() {
+    func test_simple_05() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 2),
@@ -131,7 +131,7 @@ final class GraphTests: XCTestCase {
         XCTAssertTrue(graph.isHamiltonianPathExist(a: 2, b: 3))
     }
     
-    func test_hamiltoPath_06() {
+    func test_simple_06() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 1, b: 2),
@@ -144,7 +144,7 @@ final class GraphTests: XCTestCase {
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 0, b: 2))
     }
     
-    func test_hamiltoPath_07() {
+    func test_simple_07() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 1, b: 2),
@@ -156,7 +156,7 @@ final class GraphTests: XCTestCase {
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 0, b: 4))
     }
     
-    func test_hamiltoPath_08() {
+    func test_small_00() {
         let graph = Graph(edges: [
             Edge(a: 1, b: 0),
             Edge(a: 1, b: 3),
@@ -169,7 +169,7 @@ final class GraphTests: XCTestCase {
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 0, b: 5))
     }
     
-    func test_hamiltoPath_09() {
+    func test_small_01() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 5),
             Edge(a: 1, b: 2),
@@ -181,7 +181,7 @@ final class GraphTests: XCTestCase {
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 0, b: 5))
     }
 
-    func test_hamiltoPath_10() {
+    func test_small_02() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 4),
@@ -194,7 +194,7 @@ final class GraphTests: XCTestCase {
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 0, b: 5))
     }
     
-    func test_hamiltoPath_11() {
+    func test_small_03() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 5)
         ])
@@ -202,7 +202,7 @@ final class GraphTests: XCTestCase {
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 0, b: 5))
     }
 
-    func test_hamiltoPath_12() {
+    func test_small_04() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 4),
             Edge(a: 1, b: 2),
@@ -214,7 +214,7 @@ final class GraphTests: XCTestCase {
         XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 5))
     }
     
-    func test_hamiltoPath_13() {
+    func test_small_05() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 4),
@@ -227,7 +227,7 @@ final class GraphTests: XCTestCase {
         XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 5))
     }
 
-    func test_hamiltoPath_14() {
+    func test_small_06() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 4),
             Edge(a: 1, b: 2),
@@ -240,7 +240,7 @@ final class GraphTests: XCTestCase {
         XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 5))
     }
     
-    func test_hamiltoPath_15() {
+    func test_small_07() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 4),
@@ -254,7 +254,7 @@ final class GraphTests: XCTestCase {
         XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 5))
     }
     
-    func test_hamiltoPath_16() {
+    func test_small_08() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 3),
@@ -268,7 +268,7 @@ final class GraphTests: XCTestCase {
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 0, b: 5))
     }
     
-    func test_hamiltoPath_17() {
+    func test_small_09() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 2),
@@ -281,7 +281,7 @@ final class GraphTests: XCTestCase {
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 0, b: 5))
     }
     
-    func test_hamiltoPath_18() {
+    func test_small_10() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 2),
@@ -297,7 +297,7 @@ final class GraphTests: XCTestCase {
         XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 6))
     }
 
-    func test_hamiltoPath_19() {
+    func test_small_11() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 5),
@@ -312,7 +312,51 @@ final class GraphTests: XCTestCase {
         XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 6))
     }
     
-    func test_hamiltoPath_20() {
+    func test_small_12() {
+        let graph = Graph(edges: [
+            Edge(a: 0, b: 1),
+            Edge(a: 0, b: 3),
+            Edge(a: 1, b: 2),
+            Edge(a: 1, b: 4),
+            Edge(a: 2, b: 3),
+            Edge(a: 2, b: 5),
+            Edge(a: 3, b: 4),
+            Edge(a: 4, b: 5),
+            Edge(a: 5, b: 6)
+        ])
+
+        XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 6))
+    }
+    
+    func test_small_13() {
+//        let graph = Graph(edges: [
+//            Edge(a: 0, b: 1),
+//            Edge(a: 0, b: 3),
+//            Edge(a: 1, b: 3),
+//            Edge(a: 1, b: 4),
+//            Edge(a: 2, b: 3),
+//            Edge(a: 2, b: 5),
+//            Edge(a: 3, b: 6),
+//            Edge(a: 4, b: 5),
+//            Edge(a: 5, b: 6)
+//        ])
+
+        let graph = Graph(edges: [
+            Edge(a: 0, b: 3),
+            Edge(a: 0, b: 1),
+            Edge(a: 1, b: 3),
+            Edge(a: 1, b: 4),
+            Edge(a: 2, b: 3),
+            Edge(a: 2, b: 5),
+            Edge(a: 3, b: 6),
+            Edge(a: 4, b: 5),
+            Edge(a: 5, b: 6)
+        ])
+        
+        XCTAssertTrue(graph.isHamiltonianPathExist(a: 0, b: 6))
+    }
+
+    func test_medium_00() {
         let graph = Graph(edges: [
             Edge(a: 0, b: 1),
             Edge(a: 0, b: 6),
@@ -332,7 +376,6 @@ final class GraphTests: XCTestCase {
         
         XCTAssertFalse(graph.isHamiltonianPathExist(a: 0, b: 5))
     }
-    
     
     func test_Herschel_graph_00() {
         let graph = Graph(edges: [

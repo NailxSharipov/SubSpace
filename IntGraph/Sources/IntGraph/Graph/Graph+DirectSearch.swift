@@ -9,49 +9,16 @@ public extension Graph {
     
     private struct Solution {
         let last: Int
-        let visited: IntSet
+        let visited: UInt64
         
         init(next: Int, size: Int) {
             self.last = next
-            var intSet = IntSet(size: size)
-            intSet.insert(next)
-            self.visited = intSet
+            self.visited = UInt64(0).setBit(index: next)
         }
         
         init(next: Int, solution: Solution) {
             self.last = next
-            var intSet = solution.visited
-            intSet.insert(next)
-            self.visited = intSet
-        }
-    }
-    
-    func findHamiltonianPathDirectSearch(a: Int, b: Int) -> [Int]? {
-        let n = self.size
-        
-        var solutions = [Solution(next: a, size: n)]
-        var buffer = [Solution]()
-
-        var i = 1
-        while i < n && !solutions.isEmpty {
-            for solution in solutions {
-                let node = self.nodes[solution.last]
-                node.forEach { x in
-                    if !solution.visited.contains(x) {
-                        buffer.append(Solution(next: x, solution: solution))
-                    }
-                }
-            }
-            
-            solutions = buffer
-            buffer.removeAll()
-            i += 1
-        }
-        
-        if let first = solutions.first, i == n {
-            return first.visited.sequence.reversed()
-        } else {
-            return nil
+            self.visited = solution.visited.setBit(index: next)
         }
     }
 
@@ -66,7 +33,7 @@ public extension Graph {
             for solution in solutions {
                 let node = self.nodes[solution.last]
                 node.forEach { x in
-                    if x != b && !solution.visited.contains(x) {
+                    if x != b && !solution.visited.isBit(index: x) {
                         buffer.append(Solution(next: x, solution: solution))
                     }
                 }
@@ -89,4 +56,25 @@ public extension Graph {
         return false
     }
     
+}
+
+private extension UInt64 {
+
+    @inline(__always)
+    func isBit(index: Int) -> Bool {
+        let bit: UInt64 = (1 << index)
+        return bit & self == bit
+    }
+    
+    @inline(__always)
+    func setBit(index: Int) -> UInt64 {
+        let bit: UInt64 = (1 << index)
+        return self | bit
+    }
+    
+    @inline(__always)
+    func clearBit(index: Int) -> UInt64 {
+        let bit: UInt64 = (1 << index)
+        return self & (UInt64.max &- bit)
+    }
 }

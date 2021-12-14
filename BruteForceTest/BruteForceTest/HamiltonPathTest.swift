@@ -19,7 +19,12 @@ struct HamiltonPathTest {
         var edges = [Edge]()
         var graph = Graph(size: n + 1)
         
+        let x0 = 0
+        let x1 = n
+        
         while i < count {
+            edges.removeAll()
+            graph.removeAll()
             var x = start + i
             i += 1
             
@@ -42,24 +47,22 @@ struct HamiltonPathTest {
             }
             
             graph.add(edges: edges)
-
-            guard graph.isConective && graph.validateVertices(a: 0, b: n) else {
-                graph.removeAll()
-                edges.removeAll()
+            guard graph.isConective && graph.validateVertices(a: x0, b: x1) else {
                 continue
             }
             
-            let direct = graph.isHamiltonianPathExistDirectSearch(a: 0, b: n)
-            let polynom = graph.isHamiltonianPathExist(a: 0, b: n)
+            let direct = graph.isHamiltonianPathExistDirectSearch(a: x0, b: x1)
+            let polynom = graph.isHamiltonianPathExist(a: x0, b: x1)
 
             if direct != polynom {
-                print("\(index) direct: \(direct)")
-                print("\(index) polynom: \(polynom)")
-                print(edges)
+                print("index: \(index)")
+                print("x: \(x)")
+                print("a: \(x0), b: \(x1)")
+                print("direct: \(direct)")
+                print("polynom: \(polynom)")
+                print(graph.edgesDescription)
+                print("edges: \(edges)")
             }
-
-            graph.removeAll()
-            edges.removeAll()
         }
         print("\(index) end")
     }

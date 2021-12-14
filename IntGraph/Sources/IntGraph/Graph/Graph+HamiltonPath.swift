@@ -341,8 +341,12 @@ private extension Branch {
                         }
                     }
                     
-                    var branches = [Branch]()
+                    guard mIndex != .empty else {
+                        return .valid
+                    }
                     
+                    var branches = [Branch]()
+
                     if mIndex != .empty {
                         // middle graph
                         var mSubGraph = graph
@@ -358,69 +362,30 @@ private extension Branch {
                             branches.append(Branch(a: x0, b: x1, graph: mSubGraph))
                         }
                     }
+
+                    var eSubGraph = graph
+                    let mSubSets = subSets[mIndex]
+                    eSubGraph.remove(nodes: mSubSets)
+                    eSubGraph.removeNode(index: x0)
+                    eSubGraph.removeNode(index: x1)
                     
                     let x = x0
-                    if aIndex != .empty && subSets[aIndex].count > 2 {
-                        // a graph
-                        
-                        var aSubGraph = graph
-                        if bIndex != .empty {
-                            aSubGraph.remove(nodes: subSets[bIndex])
+                    // merge x0 and x1 into x
+                    graph.nodes[x0].forEach { i in
+                        if !mSubSets.contains(i) && i != x1 {
+                            eSubGraph.add(edge: Edge(a: x, b: i))
                         }
-                        if mIndex != .empty {
-                            aSubGraph.remove(nodes: subSets[mIndex])
-                        }
-                        aSubGraph.removeNode(index: x0)
-                        aSubGraph.removeNode(index: x1)
-
-                        graph.nodes[x0].forEach { index in
-                            if aSubGraph.nodes.contains(index) {
-                                aSubGraph.add(edge: Edge(a: x, b: index))
-                            }
-                        }
-                        
-                        graph.nodes[x1].forEach { index in
-                            if aSubGraph.nodes.contains(index) {
-                                aSubGraph.add(edge: Edge(a: x, b: index))
-                            }
-                        }
-                        
-                        if aSubGraph.nodes.count > 3 {
-                            branches.append(Branch(a: a, b: x, graph: aSubGraph))
+                    }
+                    graph.nodes[x1].forEach { i in
+                        if !mSubSets.contains(i) && i != x0 {
+                            eSubGraph.add(edge: Edge(a: x, b: i))
                         }
                     }
                     
-                    if bIndex != .empty && subSets[bIndex].count > 2 {
-                        // b graph
-                        
-                        var bSubGraph = graph
-                        if aIndex != .empty {
-                            bSubGraph.remove(nodes: subSets[aIndex])
-                        }
-                        if mIndex != .empty {
-                            bSubGraph.remove(nodes: subSets[mIndex])
-                        }
-                        bSubGraph.removeNode(index: x0)
-                        bSubGraph.removeNode(index: x1)
-
-                        graph.nodes[x0].forEach { index in
-                            if bSubGraph.nodes.contains(index) {
-                                bSubGraph.add(edge: Edge(a: x, b: index))
-                            }
-                        }
-                        
-                        graph.nodes[x1].forEach { index in
-                            if bSubGraph.nodes.contains(index) {
-                                bSubGraph.add(edge: Edge(a: x, b: index))
-                            }
-                        }
-                        
-                        if bSubGraph.nodes.count > 3 {
-                            branches.append(Branch(a: b, b: x, graph: bSubGraph))
-                        }
-                        
+                    if eSubGraph.nodes.count > 3 {
+                        branches.append(Branch(a: a, b: b, graph: eSubGraph))
                     }
-                    
+
                     if !branches.isEmpty {
                         return .subBranches(branches)
                     }
@@ -430,12 +395,6 @@ private extension Branch {
             }
         }
 
-        return .valid
-    }
-    
-    
-    func discover(indices: [Int]) -> Result {
-        
         return .valid
     }
 
